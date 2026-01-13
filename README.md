@@ -1,0 +1,1 @@
+**I will be continuosly trying to implement various paper with different architectural appraoch in order to get a better understanding to the applied architecture and knowledge around the relevant topic**
