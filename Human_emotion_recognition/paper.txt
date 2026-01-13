@@ -1,0 +1,69 @@
+from this paper "Human emotion recognition using machine learning techniques based on the physiolofical signal" tells a classic ML pipeline to recognise emotions from non-invasive physiological signals. even though it differs from the more complex approach i tried to apply.
+- the authors use simple statistical features and traditional classifiers to demonstrate that strong results can also be achieved with simple lightweight models
+
+
+- signals used: Electroencephalography (EEG), electrocardiography (ECG) and galvanic skin response (GSR).
+- EEG will capture brain activity
+- ECG will measure heart rate vaiability
+- GSR will monitor skin conductance
+all these signals are the complementary to views of emotional arousal
+
+dataset information:
+AMIGOS: 40 participants watched short and long videos; data were recorded on 14 EEG channels (128 Hz), 2 ECG channels and 1 GSR channel. 
+Participants self‑rated valence, arousal, dominance, familiarity and liking, and identified basic emotions (neutral, disgust, happy, surprise, anger, fear and sad).
+
+ASCERTAIN: 58 participants viewed 36 film clips; EEG, ECG, GSR and facial activity were recorded. Labels cover arousal, valence, liking, engagement and familiarity.
+
+original architeture approach:
+1. pre-processing: after cleaning up of rows & columns each channel of each signal is normalised by 
+dividing by max value to that the value will be in the range of 0-1. this will normalise the data before feature extraction
+2. Segmentation: signals are segmented into windows(in paper there wasnt any mention for the exact window length but the usual 
+range and approach is between 2-10s window)
+3. feature extraction: only time domain statistical features are used for each pre processed window 
+these are the 5 statistics feature which are being used 
+- mean, variance, standard deviation, skewness, kurtosis
+4. Classification
+- Random forest: 100 trees, gini criterion with no specified depth for the trees
+- Logistic Regression: L2 penalty, tolerance 0.0001, C = 1.0, max iterations = 100
+- K-Nearest Neighbour: 5 neighbours, automatic algorithm selection, leaf size 30
+
+hyper parameters were tuned by experimenting with train/val splits(10 fold cross val is mentioned) evaluation: 
+the authors use accuracy, precision, recall, F1-score, Cohen’s kappa and Matthews correlation coefficient (MCC) to assess performance 
+this simple architecture differs from the CNN/transformer i implemented: it does not employ wavelet transforms, 2-D topomaps, 
+patch embedding or attention mechanisms. instead, it relies on classical feature engineering and traditional classifiers.
+
+results and insights: the method shows that time-domain features combined with simple classifiers can achieve strong performance. 
+AMIGOS results: RF achieved the best accuracy for EEG and GSR signals (~93 % accuracy and F1 ≈ 0.93), while KNN was slightly better 
+for ECG (≈92 % accuracy).
+
+- RF improved EEG accuracy by 1.57 % and F1-score by 0.25
+
+- KNN improved ECG accuracy by 1.56 % and F1-score by 0.021
+
+- RF improved GSR accuracy by 8.145 % and F1-score by 0.32
+
+- ASCERTAIN results: RF again performed best on EEG; LR unexpectedly achieved the highest accuracy on ECG; RF was best on GSR.
+
+- LR improved ECG accuracy by 22.42 % and F1-score by 0.22
+
+- RF improved GSR accuracy by 37.5 % and F1-score by 0.28
+
+the authors conclude that Random Forest is consistently strong for EEG and GSR, while KNN may be better for ECG. 
+the approach is computationally inexpensive and can be a “valuable tool for classifying emotional states”
+
+takeaways:
+
+simplicity can be effective: even without deep learning or sophisticated features, 
+careful pre-processing and well-tuned classical models can yield high accuracy
+
+feature selection matters: time-domain statistics (mean, variance, skewness, kurtosis) provided sufficient discriminative power for the tasks considered
+
+signal modality differences: EEG and GSR seem more informative for emotion recognition than ECG in this setup, 
+and each modality may require a different classifier to achieve the best performance
+
+benchmarking on multiple datasets: testing on both AMIGOS and ASCERTAIN strengthens the conclusions by showing that 
+results generalise across datasets
+
+overall, the paper demonstrates a clear baseline pipeline for emotion recognition using physiological signals. 
+it emphasises that, although deep learning architectures might offer improved performance, traditional methods remain competitive and easier to 
+implement for real-time or resource-constrained applications.
