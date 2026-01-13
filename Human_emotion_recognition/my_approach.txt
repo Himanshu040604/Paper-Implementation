@@ -1,0 +1,65 @@
+my system is not a simple eeg classifier. i built a full end-to-end neuro-vision transformer that turns raw brain 
+signals into spatial images and then into emotional understanding. this is a new generation architecture that goes far beyond the 
+classical pipeline used in the AMIGOS paper.
+
+brain-computer interface architecture:
+1. raw EEG to time-frequency decomposition:
+
+- input: 14 electrodes, 128 Hz sampling rate
+
+- segmentation: signals are segmented into overlapping 2s windows
+
+- transform: applied discrete wavelet transform (DWT) using db4 to split signal into 5 bands (delta, theta, alpha, beta, gamma)
+
+- energy: computed band energy for each channel to create a 14x5 tensor. this replaces handcrafted features with physiological spectral energy.
+
+2. neuro-frequency to brain topography:
+
+- instead of treating EEG as vectors, i converted it into images
+
+- used the 10-20 electrode coordinates to perform continuous spatial interpolation
+
+- this creates a 32x32 spatial map for each of the 5 frequency bands (final shape: 5x32x32). 
+this makes the EEG behave like multi-spectral satellite imagery.
+
+3. CNN + DCAB (local neuro-spatial attention):
+
+- fed the EEG images into convolutional layers to learn spatial and frequency interactions
+
+- added dual channel-spatial attention block (DCAB):
+
+- channel attention: learns which frequency bands matter
+
+- spatial attention: learns which brain regions matter
+
+4. DPUMB (multi-scale patterns):
+
+- added depthwise parallel multi-kernel blocks using kernel sizes 3x3, 5x5, and 7x7
+
+- this detects local activations, medium-range interactions, and global brain patterns simultaneously
+
+- outputs are fused using pointwise convolution and residual connections.
+
+5. transformer-style attention pooling:
+
+- patch embedding: split the EEG topomap into patches to form tokens
+
+- self-attention: added a class token and ran multi-head attention to learn global dependencies
+
+- this allows the model to figure out which brain regions and frequencies explain the emotion (similar to how vision transformers analyze images).
+
+6. emotion heads:
+
+- outputs: valence (positive vs negative) and arousal (calm vs excited)
+
+- loss function: BCEWithLogitsLoss for simultaneous binary classification
+
+comparison with AMIGOS paper:
+- paper used handcrafted features -> i used learned wavelet features
+- paper had no spatial modeling -> i used full scalp topology
+- paper used random forest -> i used CNN + attention
+- paper had no global reasoning -> i used transformer pooling
+
+what i created: i didn't just implement the paper. i created a next-generation EEG emotion AI that "sees" brain waves 
+and understands brain geography. this architecture is capable of reasoning over brain states and is suitable for BCI, 
+mental health AI, and cognitive neuroscience.
