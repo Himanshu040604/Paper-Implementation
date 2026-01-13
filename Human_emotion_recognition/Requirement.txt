@@ -1,0 +1,30 @@
+# Core Python
+numpy>=1.23
+scipy>=1.10
+matplotlib>=3.7
+
+# EEG & signal processing
+PyWavelets>=1.4
+
+# Machine learning
+torch>=2.0
+torchvision>=0.15
+torchaudio>=2.0
+
+# Data handling
+scikit-learn>=1.2
+h5py>=3.8
+
+# Performance utilities
+tqdm>=4.65
+
+# Kaggle & notebook support
+ipython>=8.10
+jupyterlab>=4.0
+
+# Visualization (optional but recommended)
+seaborn>=0.12
+
+# Optional: for future augmentation / advanced pipelines
+opencv-python>=4.7
+albumentations>=1.3
